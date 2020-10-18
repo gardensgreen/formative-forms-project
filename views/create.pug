@@ -2,11 +2,18 @@ extends layout.pug
 
 mixin input(name, content, type)
     label(for=name)=content
-    input(type=type name=name required).form-control
-
-
+    if user
+        input(type=type, name=name, value=user[name]).form-control
+    else
+        input(type=type, name=name).form-control
 
 block content
+    if errors
+        ul
+            p The following errors were found
+            each error in errors
+                li=error
+
     form(method= "post" action="/create").form-group
         input(type="hidden" name="_csrf" value=csrfToken)
 
