@@ -32,6 +32,7 @@ block content
                 input(name="iceCream" type="checkbox" checked).form-control
             else
                 +input("iceCream", "Ice Cream:", "checkbox")
-
+        else
+            +input("iceCream", "Ice Cream:", "checkbox")
 
         input(type="submit", value="Create Interesting User").btn.btn-primary.mt-2

@@ -108,6 +108,13 @@ app.post("/create-interesting", csrfProtection, validate, (req, res) => {
         errors.push("favoriteBeatle must be a real Beatle member");
     }
 
+    let iceCreamBool;
+    if (iceCream === "on") {
+        iceCreamBool = true;
+    } else {
+        iceCreamBool = false;
+    }
+
     const user = {
         firstName: req.user.firstName,
         lastName: req.user.lastName,
@@ -115,7 +122,7 @@ app.post("/create-interesting", csrfProtection, validate, (req, res) => {
         password: req.user.password,
         age: age,
         favoriteBeatle: favoriteBeatle,
-        iceCream: iceCream,
+        iceCream: iceCreamBool,
     };
 
     let beatles = [
