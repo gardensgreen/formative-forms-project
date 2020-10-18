@@ -45,12 +45,10 @@ const validate = (req, res, next) => {
         lastName,
         email,
         password,
-        confirmedPassword
-    }
-
+        confirmedPassword,
+    };
 
     next();
-
 };
 
 app.get("/", (req, res) => {
@@ -63,17 +61,14 @@ app.get("/create", csrfProtection, (req, res, next) => {
 });
 
 app.get("/create-interesting", csrfProtection, (req, res, next) => {
-
     let beatles = [
-        {name: "John"}, 
-        {name: "Paul"}, 
-        {name: "Ringo"}, 
-        {name: "George"}
+        { name: "John" },
+        { name: "Paul" },
+        { name: "Ringo" },
+        { name: "George" },
     ];
 
-
-    res.render("create-interesting", 
-        { beatles, csrfToken: req.csrfToken() });
+    res.render("create-interesting", { beatles, csrfToken: req.csrfToken() });
 });
 
 let idCount = 1;
@@ -100,19 +95,18 @@ app.post("/create", csrfProtection, validate, (req, res) => {
 });
 
 app.post("/create-interesting", csrfProtection, validate, (req, res) => {
-    
     const errors = req.errors;
-    const { age, favoriteBeatle, iceCream} = req.body;
+    const { age, favoriteBeatle, iceCream } = req.body;
 
     if (!age) errors.push("age is required");
-    if (typeof parseInt(age, 10) !== "number") errors.push("age must be a valid age");
+    if (typeof parseInt(age, 10) !== "number")
+        errors.push("age must be a valid age");
     if (age > 120 || age < 0) errors.push("age must be a valid age");
 
     if (!favoriteBeatle) errors.push("favoriteBeatle is required");
-    if (!["John","Paul","Ringo","George"].includes(favoriteBeatle)) {
-        errors.push("favoriteBeatle must be a real Beatle member")
+    if (!["John", "Paul", "Ringo", "George"].includes(favoriteBeatle)) {
+        errors.push("favoriteBeatle must be a real Beatle member");
     }
-
 
     const user = {
         firstName: req.user.firstName,
@@ -121,18 +115,23 @@ app.post("/create-interesting", csrfProtection, validate, (req, res) => {
         password: req.user.password,
         age: age,
         favoriteBeatle: favoriteBeatle,
-        iceCream: iceCream
+        iceCream: iceCream,
     };
 
     let beatles = [
-        {name: "John"}, 
-        {name: "Paul"}, 
-        {name: "Ringo"}, 
-        {name: "George"}
+        { name: "John" },
+        { name: "Paul" },
+        { name: "Ringo" },
+        { name: "George" },
     ];
 
     if (errors.length > 0) {
-        res.render("create-interesting", { beatles, user, errors, csrfToken: req.csrfToken() });
+        res.render("create-interesting", {
+            beatles,
+            user,
+            errors,
+            csrfToken: req.csrfToken(),
+        });
         return;
     }
 

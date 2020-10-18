@@ -6,7 +6,7 @@ mixin option(name)
 
 block content
     include includes/errors.pug
-    
+
 
     form(method= "post" action="/create-interesting").form-group
         input(type="hidden" name="_csrf" value=csrfToken)
@@ -17,8 +17,8 @@ block content
         +input("password", "Password:", "password")
         +input("confirmedPassword", "Confirmed Password:", "password")
         +input("age", "Age:", "number")
-        
-        
+
+
         label(for="favoriteBeatle") Favorite Beatle:
         select(name = "favoriteBeatle").form-control
             option(value="") --Please choose an option--
@@ -26,7 +26,12 @@ block content
                 +option(beatle.name)
             option(value="Scooby-Doo") Scooby-Doo
 
-        +input("iceCream", "Ice Cream:", "checkbox")
- 
+        if user
+            if user.iceCream
+                label(for="iceCream")
+                input(name="iceCream" type="checkbox" checked).form-control
+            else
+                +input("iceCream", "Ice Cream:", "checkbox")
+
 
         input(type="submit", value="Create Interesting User").btn.btn-primary.mt-2
