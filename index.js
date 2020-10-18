@@ -31,13 +31,23 @@ app.get("/create", csrfProtection, (req, res, next) => {
 let idCount = 1;
 app.post("/create", csrfProtection, (req, res) => {
     const errors = [];
-    const { firstName, lastName, email, password } = req.body;
+    const {
+        firstName,
+        lastName,
+        email,
+        password,
+        confirmedPassword,
+    } = req.body;
 
-    console.log(req.body);
-    if (!firstName) errors.push("Please fill out the first name field.");
-    if (!lastName) errors.push("Please fill out the last name field.");
-    if (!email) errors.push("Please fill out the email field.");
-    if (!password) errors.push("Please fill out the password field.");
+    if (!firstName) errors.push("Please provide a first name.");
+    if (!lastName) errors.push("Please provide a last name.");
+    if (!email) errors.push("Please provide an email.");
+    if (!password) errors.push("Please provide a password.");
+    if (password !== confirmedPassword) {
+        errors.push(
+            "The provided values for the password and password confirmation fields did not match."
+        );
+    }
 
     const user = {
         firstName: firstName,
@@ -55,7 +65,7 @@ app.post("/create", csrfProtection, (req, res) => {
     user.id = idCount;
 
     users.push(user);
-    res.render("create", { csrfToken: req.csrfToken() });
+    res.redirect("/");
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
