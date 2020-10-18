@@ -2,7 +2,10 @@ extends layout.pug
 include includes/form-inputs.pug
 
 mixin option(name)
-    option(value=name)=name
+    if user
+        option(value=name, selected=(name===user.favoriteBeatle))=name
+    else
+        option(value=name)=name
 
 block content
     include includes/errors.pug

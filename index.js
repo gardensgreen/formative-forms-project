@@ -99,8 +99,7 @@ app.post("/create-interesting", csrfProtection, validate, (req, res) => {
     const { age, favoriteBeatle, iceCream } = req.body;
 
     if (!age) errors.push("age is required");
-    if (typeof parseInt(age, 10) !== "number")
-        errors.push("age must be a valid age");
+    if (!(age > 0)) errors.push("age must be a valid age");
     if (age > 120 || age < 0) errors.push("age must be a valid age");
 
     if (!favoriteBeatle) errors.push("favoriteBeatle is required");
