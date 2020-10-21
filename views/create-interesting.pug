@@ -1,0 +1,32 @@
+extends layout.pug
+include includes/form-inputs.pug
+
+mixin option(name)
+    option(value=name)=name
+
+block content
+    include includes/errors.pug
+    
+
+    form(method= "post" action="/create-interesting").form-group
+        input(type="hidden" name="_csrf" value=csrfToken)
+
+        +input("firstName", "First Name:", "text")
+        +input("lastName", "Last Name:", "text")
+        +input("email", "Email:", "email")
+        +input("password", "Password:", "password")
+        +input("confirmedPassword", "Confirmed Password:", "password")
+        +input("age", "Age:", "number")
+        
+        
+        label(for="favoriteBeatle") Favorite Beatle:
+        select(name = "favoriteBeatle").form-control
+            option(value="") --Please choose an option--
+            each beatle in beatles
+                +option(beatle.name)
+            option(value="Scooby-Doo") Scooby-Doo
+
+        +input("iceCream", "Ice Cream:", "checkbox")
+ 
+
+        input(type="submit", value="Create Interesting User").btn.btn-primary.mt-2

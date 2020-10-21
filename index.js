@@ -19,17 +19,7 @@ app.set("view engine", "pug");
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-    // res.send("Hello World!");
-    res.render("index", { users });
-});
-
-app.get("/create", csrfProtection, (req, res, next) => {
-    res.render("create", { csrfToken: req.csrfToken() });
-});
-
-let idCount = 1;
-app.post("/create", csrfProtection, (req, res) => {
+const validate = (req, res, next) => {
     const errors = [];
     const {
         firstName,
@@ -48,16 +38,101 @@ app.post("/create", csrfProtection, (req, res) => {
             "The provided values for the password and password confirmation fields did not match."
         );
     }
+    req.errors = errors;
+
+    req.user = {
+        firstName,
+        lastName,
+        email,
+        password,
+        confirmedPassword
+    }
+
+
+    next();
+
+};
+
+app.get("/", (req, res) => {
+    // res.send("Hello World!");
+    res.render("index", { users });
+});
+
+app.get("/create", csrfProtection, (req, res, next) => {
+    res.render("create", { csrfToken: req.csrfToken() });
+});
+
+app.get("/create-interesting", csrfProtection, (req, res, next) => {
+
+    let beatles = [
+        {name: "John"}, 
+        {name: "Paul"}, 
+        {name: "Ringo"}, 
+        {name: "George"}
+    ];
+
+
+    res.render("create-interesting", 
+        { beatles, csrfToken: req.csrfToken() });
+});
+
+let idCount = 1;
+app.post("/create", csrfProtection, validate, (req, res) => {
+    const errors = req.errors;
 
     const user = {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        email: req.user.email,
+        password: req.user.password,
     };
 
     if (errors.length > 0) {
         res.render("create", { user, errors, csrfToken: req.csrfToken() });
+        return;
+    }
+
+    idCount++;
+    user.id = idCount;
+
+    users.push(user);
+    res.redirect("/");
+});
+
+app.post("/create-interesting", csrfProtection, validate, (req, res) => {
+    
+    const errors = req.errors;
+    const { age, favoriteBeatle, iceCream} = req.body;
+
+    if (!age) errors.push("age is required");
+    if (typeof parseInt(age, 10) !== "number") errors.push("age must be a valid age");
+    if (age > 120 || age < 0) errors.push("age must be a valid age");
+
+    if (!favoriteBeatle) errors.push("favoriteBeatle is required");
+    if (!["John","Paul","Ringo","George"].includes(favoriteBeatle)) {
+        errors.push("favoriteBeatle must be a real Beatle member")
+    }
+
+
+    const user = {
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        email: req.user.email,
+        password: req.user.password,
+        age: age,
+        favoriteBeatle: favoriteBeatle,
+        iceCream: iceCream
+    };
+
+    let beatles = [
+        {name: "John"}, 
+        {name: "Paul"}, 
+        {name: "Ringo"}, 
+        {name: "George"}
+    ];
+
+    if (errors.length > 0) {
+        res.render("create-interesting", { beatles, user, errors, csrfToken: req.csrfToken() });
         return;
     }
 

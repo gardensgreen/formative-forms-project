@@ -1,0 +1,6 @@
+mixin input(name, content, type)
+    label(for=name)=content
+    if user
+        input(type=type, name=name, value=user[name]).form-control
+    else
+        input(type=type, name=name).form-control
